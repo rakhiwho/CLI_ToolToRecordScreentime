@@ -13,6 +13,25 @@ export default function todayCommand() {
   const data = JSON.parse(fs.readFileSync(file, "utf-8"));
 
   console.log("Today's usage:");
-  console.log(data.tabs);
-}
   
+Object.entries(data.tabs).forEach(([site, timeMs]) => {
+  console.log(`${site} → ${formatTime(timeMs)}`);
+});
+}
+
+function formatTime(ms) {
+  const totalSeconds = Math.floor(ms / 1000);
+  if(totalSeconds<60){
+    return totalSeconds + "s"
+  }
+  const minutes = Math.floor(totalSeconds / 60);
+  const hours = Math.floor(minutes / 60);
+
+  const remainingMinutes = minutes % 60;
+  const remainingSecs = totalSeconds % 60;
+
+  if (hours > 0) {
+    return `${hours}h ${remainingMinutes}m ${remainingSecs}s`;
+  }
+  return `${minutes}m ${remainingSecs}s`;
+}
